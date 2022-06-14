@@ -1,7 +1,5 @@
 const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
-const bcrypt = require('bcrypt');
-const zlib = require('zlib');
 
 const { DataTypes } = Sequelize;
 
@@ -36,41 +34,14 @@ const User = sequelize.define(
             allowNull: false,
             validate: {
                 len: [4,6]
-            },
-            get(){
-                const rawValue = this.getDataValue('username');
-                return rawValue.toUpperCase();
             }
         },
         password: {
-            type: DataTypes.STRING,
-            set(value){
-                const salt = bcrypt.genSaltSync(12);
-                const hash = bcrypt.hashSync(value, salt);
-                this.setDataValue('password', hash);
-            }
+            type: DataTypes.STRING(20)
         },
         age:{
             type: DataTypes.INTEGER,
             defaultValue: 18
-        },
-        description:{
-            type: DataTypes.STRING,
-            set(value){
-                const compressed = zlib.deflateSync(value).toString('base64');
-                this.setDataValue('description', compressed);
-            },
-            get(){
-                const value = this.getDataValue('description');
-                const uncompressed = zlib.inflateSync(Buffer.from(value, 'base64'));
-                return uncompressed.toString();
-            }
-        },
-        aboutUser:{
-            type: DataTypes.VIRTUAL,
-            get(){
-                return `${this.username}: is about, ${this.description}`
-            }
         }
     },
     {
@@ -80,13 +51,13 @@ const User = sequelize.define(
 );
 
 User.sync({alter: true}).then((data) => {
-    return User.findOne({
+    return User.destroy({
         where: {
-            username: 'Wire'
+            password: '123'
         }
     });
 }).then((data) => {
-    console.log(data.aboutUser);
+    console.log(data);
 }).catch((err) => {
     console.log('user integration failed', err);
 });

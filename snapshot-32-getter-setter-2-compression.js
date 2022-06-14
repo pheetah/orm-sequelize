@@ -65,12 +65,6 @@ const User = sequelize.define(
                 const uncompressed = zlib.inflateSync(Buffer.from(value, 'base64'));
                 return uncompressed.toString();
             }
-        },
-        aboutUser:{
-            type: DataTypes.VIRTUAL,
-            get(){
-                return `${this.username}: is about, ${this.description}`
-            }
         }
     },
     {
@@ -80,13 +74,15 @@ const User = sequelize.define(
 );
 
 User.sync({alter: true}).then((data) => {
-    return User.findOne({
-        where: {
-            username: 'Wire'
-        }
+    return User.create({
+        username: 'Wire',
+        password: 'soccerpizza',
+        description: 'this description can be very long'
     });
 }).then((data) => {
-    console.log(data.aboutUser);
+    console.log(data.username);
+    console.log(data.password);
+    console.log(data.description);
 }).catch((err) => {
     console.log('user integration failed', err);
 });
