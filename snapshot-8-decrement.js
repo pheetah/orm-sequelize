@@ -53,12 +53,7 @@ User.sync({alter: true}).then((data) => {
         age: 25
     });
 }).then((data) => {
-    data.username = "piiza";
-    data.age = 45;
-    console.log('second chain (user added to database): ', data.toJSON());
-    return data.reload(); //reload() brings back original data, not the mutated one! so age will be 25 instead of 45
-}).then(() => {
-    console.log('USER RETURNED')
+    data.decrement({ age: 2 });
 }).catch((err) => {
     console.log('user integration failed', err);
 });
