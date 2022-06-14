@@ -31,9 +31,6 @@ const User = sequelize.define(
         username: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate: {
-                len: [4,6]
-            }
         },
         password: {
             type: DataTypes.STRING(20)
@@ -50,14 +47,21 @@ const User = sequelize.define(
 );
 
 User.sync({alter: true}).then((data) => {
-    return User.findAll({ attributes: [
-        'username', 
-        [sequelize.fn('SUM', sequelize.col('age')), 'sum_age']],
-        group: 'username'
-    }); //DESC for descending ASC for ascending
-}).then((data) => {
-    data.forEach(data => {
-        console.log(data.toJSON());
+    return User.bulkCreate([
+        { 
+            username: 'sefe',
+            age: 23,
+            password: 'pizza' 
+        },
+        {
+            username: 'ssds',
+            age: 23,
+            password: 'xd' 
+        }
+    ]);
+}).then((datas) => {
+    datas.forEach(data => {
+        console.log('element: ', data.toJSON());
     })
 }).catch((err) => {
     console.log('user integration failed', err);

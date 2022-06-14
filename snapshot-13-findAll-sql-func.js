@@ -50,11 +50,7 @@ const User = sequelize.define(
 );
 
 User.sync({alter: true}).then((data) => {
-    return User.findAll({ attributes: [
-        'username', 
-        [sequelize.fn('SUM', sequelize.col('age')), 'sum_age']],
-        group: 'username'
-    }); //DESC for descending ASC for ascending
+    return User.findAll({ attributes: [[sequelize.fn('SUM', sequelize.col('age')), 'howOld']]});
 }).then((data) => {
     data.forEach(data => {
         console.log(data.toJSON());

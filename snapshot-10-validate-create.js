@@ -33,7 +33,7 @@ const User = sequelize.define(
             allowNull: false,
             validate: {
                 len: [4,6]
-            }
+            } //works on create but not bulkCreate!
         },
         password: {
             type: DataTypes.STRING(20)
@@ -50,15 +50,15 @@ const User = sequelize.define(
 );
 
 User.sync({alter: true}).then((data) => {
-    return User.findAll({ attributes: [
-        'username', 
-        [sequelize.fn('SUM', sequelize.col('age')), 'sum_age']],
-        group: 'username'
-    }); //DESC for descending ASC for ascending
+    return User.create(
+        {
+            username: 'longerthansix',
+            age: 23,
+            password: 'xd' 
+        }
+    );
 }).then((data) => {
-    data.forEach(data => {
-        console.log(data.toJSON());
-    })
+    console.log(data.toJSON())
 }).catch((err) => {
     console.log('user integration failed', err);
 });
