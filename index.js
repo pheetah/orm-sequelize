@@ -112,14 +112,10 @@ const User = sequelize.define(
 );
 
 User.sync({alter: true}).then((data) => {
-    return User.create({
-        username: 'asdd',
-        password: 'asdd',
-        age: '22',
-        email: 'dfa123d4sd@hotmail.com'
-    });
+    return sequelize.query('UPDATE user SET age = 54 WHERE username = "Wire" ');
 }).then((data) => {
-    console.log(data);
+    const [result, metadata] = data;
+    console.log('res: ', result, 'metadata: ', metadata);
 }).catch((err) => {
     console.log('user integration failed', err);
 });
