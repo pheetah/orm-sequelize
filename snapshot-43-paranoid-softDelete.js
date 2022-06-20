@@ -114,7 +114,7 @@ const User = sequelize.define(
 );
 
 User.sync({alter: true}).then((data) => {
-    return User.restore(
+    return User.destroy(
         {
             where: { user_id : 12 },
             //force: true // permanently destroy

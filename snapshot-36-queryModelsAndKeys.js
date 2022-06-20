@@ -98,7 +98,7 @@ const User = sequelize.define(
     },
     {
         freezeTableName: true, //user instead of users
-        timestamps: true,
+        timestamps: false, //discard createdAt and updatedAt
         validate: {
             usernamePassMatch(){
                 if(this.username === this.password){
@@ -107,19 +107,12 @@ const User = sequelize.define(
                     console.log('success!')
                 }
             }
-        },
-        paranoid: true,
-        //deletedAt: 'timeDestroyed'
+        }
     }
 );
 
 User.sync({alter: true}).then((data) => {
-    return User.restore(
-        {
-            where: { user_id : 12 },
-            //force: true // permanently destroy
-        }
-    );
+    return sequelize.query('SELECT * from user LIMIT 2', {model: User, plain: true});
 }).then((data) => {
     console.log('data: ', data);
 }).catch((err) => {
